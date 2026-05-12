@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/auth', [AuthController::class, 'login'])->name('api.auth');
 
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('api.logout');
+
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    })->name('api.me');
+});
+
 Route::get('/test', function () {
     return response()->json(['message' => 'API is working']);
 })->name('api.test');
-
-Route::middleware('auth:api')->get('/me', function (Request $request) {
-    return $request->user();
-});
